@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +19,20 @@
             background-position: center;
             background-size: cover;
             background-repeat: no-repeat;
+            color: white;
+            /* To make sure text is visible */
         }
-        #game-setup, #game-board {
+
+        #game-setup,
+        #game-board {
             display: none;
         }
-        #game-setup.active, #game-board.active {
+
+        #game-setup.active,
+        #game-board.active {
             display: block;
         }
+
         #board {
             display: grid;
             grid-template-columns: repeat(5, 60px);
@@ -32,6 +40,7 @@
             gap: 2px;
             margin-bottom: 20px;
         }
+
         .cell {
             width: 60px;
             height: 60px;
@@ -39,9 +48,13 @@
             justify-content: center;
             align-items: center;
             border: 1px solid #ccc;
-            background-color: #f0f0f0;
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Black transparent background */
+            color: white;
+            /* Ensure text is visible on dark background */
             position: relative;
         }
+
         .player {
             position: absolute;
             width: 20px;
@@ -49,17 +62,25 @@
             border-radius: 50%;
             transition: transform 0.3s;
         }
+
         #controls {
             display: flex;
             flex-direction: column;
             align-items: center;
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Black transparent background */
+            padding: 10px;
+            border-radius: 5px;
         }
+
         #status {
             margin-bottom: 20px;
         }
+
         #quiz-container {
             display: none;
-            background-color: white;
+            background-color: rgba(0, 0, 0, 0.9);
+            /* Darker transparent background */
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -68,7 +89,17 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            color: white;
+            /* Ensure text is visible */
         }
+
+        #game-setup {
+            background-color: rgba(0, 0, 0, 0.9);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 0px 20px 20px 20px;
+            border-radius: 8px;
+        }
+
         button {
             margin-top: 20px;
             padding: 10px 20px;
@@ -78,32 +109,38 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
         .answer-btn {
             display: block;
-            margin: 10px 0;
+            margin: auto;
+            margin-bottom: 10px;
             padding: 10px;
-            background-color: #e0e0e0;
+            background-color: rgba(255, 255, 255, 0.5);
+            color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
         }
+
         .answer-btn:hover {
             background-color: #d0d0d0;
         }
     </style>
 </head>
+
 <body>
     <div id="game-setup" class="active">
-        <label for="players">Select number of players (2-4): </label>
+        <label for="players">Sélectionner un nombre de joueur (2-4): </label>
         <select id="players">
-            <option value="2">2 Players</option>
-            <option value="3">3 Players</option>
-            <option value="4">4 Players</option>
+            <option value="2">2 joueurs</option>
+            <option value="3">3 joueurs</option>
+            <option value="4">4 joueurs</option>
         </select>
-        <button onclick="startGame()">Start Game</button>
+        <button onclick="startGame()">Début jeu</button>
     </div>
 
     <div id="game-board">
@@ -123,7 +160,7 @@
     </div>
 
     <script>
-const questions = [
+        const questions = [
             { "question": "Quelle est la voiture la plus rapide du monde en 2024 ?", "answers": [{ "text": "Bugatti Chiron Super Sport 300+", "correct": true }, { "text": "Koenigsegg Jesko Absolut", "correct": false }, { "text": "Hennessey Venom F5", "correct": false }, { "text": "SSC Tuatara", "correct": false }] },
             { "question": "Quelle est la marque de voiture la plus ancienne encore en activité ?", "answers": [{ "text": "Peugeot", "correct": true }, { "text": "Ford", "correct": false }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Fiat", "correct": false }] },
             { "question": "Quel pays est le plus grand producteur de voitures au monde ?", "answers": [{ "text": "Chine", "correct": true }, { "text": "États-Unis", "correct": false }, { "text": "Japon", "correct": false }, { "text": "Allemagne", "correct": false }] },
@@ -171,11 +208,10 @@ const questions = [
                     }
                 }
                 switch (newPosition) {
-                    case 3: return 13;
-                    case 5: return 8;
-                    case 11: return 17;
-                    case 16: return 6;
-                    case 23: return 13;
+                    case 6: return 1;
+                    case 9: return 12;
+                    case 14: return 18;
+                    case 22: return 12;
                     default: return newPosition;
                 }
             }
@@ -341,4 +377,5 @@ const questions = [
         createBoard();
     </script>
 </body>
+
 </html>
