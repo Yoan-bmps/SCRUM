@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -53,6 +54,7 @@
         }
     </style>
 </head>
+
 <body>
     <div id="quiz-container">
         <h1>Quiz sur les voitures</h1>
@@ -66,29 +68,97 @@
     <script>
         const questions = [
             {
-                question: "Quelle est la voiture la plus vendue de tous les temps ?",
-                answers: [
-                    { text: "Toyota Corolla", correct: true },
-                    { text: "Ford F-Series", correct: false },
-                    { text: "Volkswagen Golf", correct: false },
-                    { text: "Honda Civic", correct: false }
-                ],
-                question: "Quelle est le XXX ?",
-                answers: [
-                    { text: "Toyota Corolla", correct: true },
-                    { text: "Ford F-Series", correct: false },
-                    { text: "Volkswagen Golf", correct: false },
-                    { text: "Honda Civic", correct: false }
-                ],
-                question: "Quelle est le YYY ?",
-                answers: [
-                    { text: "Toyota Corolla", correct: true },
-                    { text: "Ford F-Series", correct: false },
-                    { text: "Volkswagen Golf", correct: false },
-                    { text: "Honda Civic", correct: false }
-                ], 
+                "question": "Quelle est la voiture la plus rapide du monde en 2024 ?",
+                "answers": [
+                    { "text": "Bugatti Chiron Super Sport 300+", "correct": true },
+                    { "text": "Koenigsegg Jesko Absolut", "correct": false },
+                    { "text": "Hennessey Venom F5", "correct": false },
+                    { "text": "SSC Tuatara", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la marque de voiture la plus ancienne encore en activité ?",
+                "answers": [
+                    { "text": "Peugeot", "correct": true },
+                    { "text": "Ford", "correct": false },
+                    { "text": "Mercedes-Benz", "correct": false },
+                    { "text": "Fiat", "correct": false }
+                ]
+            },
+            {
+                "question": "Quel pays est le plus grand producteur de voitures au monde ?",
+                "answers": [
+                    { "text": "Chine", "correct": true },
+                    { "text": "États-Unis", "correct": false },
+                    { "text": "Japon", "correct": false },
+                    { "text": "Allemagne", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la voiture électrique la plus vendue en 2023 ?",
+                "answers": [
+                    { "text": "Tesla Model Y", "correct": true },
+                    { "text": "Nissan Leaf", "correct": false },
+                    { "text": "Volkswagen ID.4", "correct": false },
+                    { "text": "Chevrolet Bolt EV", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la marque de voiture la plus vendue en Europe en 2023 ?",
+                "answers": [
+                    { "text": "Volkswagen", "correct": true },
+                    { "text": "Renault", "correct": false },
+                    { "text": "Peugeot", "correct": false },
+                    { "text": "BMW", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle voiture a remporté les 24 Heures du Mans en 2023 ?",
+                "answers": [
+                    { "text": "Ferrari 499P", "correct": true },
+                    { "text": "Toyota GR010 Hybrid", "correct": false },
+                    { "text": "Porsche 963", "correct": false },
+                    { "text": "Glickenhaus 007", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la première voiture de série à avoir atteint 1 million d'exemplaires produits ?",
+                "answers": [
+                    { "text": "Ford Model T", "correct": true },
+                    { "text": "Volkswagen Beetle", "correct": false },
+                    { "text": "Chevrolet Bel Air", "correct": false },
+                    { "text": "Mini Cooper", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la voiture la plus chère jamais vendue aux enchères ?",
+                "answers": [
+                    { "text": "Ferrari 250 GTO", "correct": true },
+                    { "text": "Bugatti Type 57SC Atlantic", "correct": false },
+                    { "text": "Mercedes-Benz W196", "correct": false },
+                    { "text": "Aston Martin DBR1", "correct": false }
+                ]
+            },
+            {
+                "question": "Quelle est la première voiture entièrement électrique produite en série ?",
+                "answers": [
+                    { "text": "Nissan Leaf", "correct": false },
+                    { "text": "Tesla Roadster", "correct": false },
+                    { "text": "General Motors EV1", "correct": true },
+                    { "text": "BMW i3", "correct": false }
+                ]
+            },
+            {
+                "question": "Quel constructeur automobile a inventé la ceinture de sécurité à trois points ?",
+                "answers": [
+                    { "text": "Volvo", "correct": true },
+                    { "text": "Mercedes-Benz", "correct": false },
+                    { "text": "Ford", "correct": false },
+                    { "text": "BMW", "correct": false }
+                ]
             }
         ];
+
 
         let currentQuestionIndex = 0;
 
@@ -136,4 +206,5 @@
         });
     </script>
 </body>
+
 </html>
