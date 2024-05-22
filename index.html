@@ -14,18 +14,16 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
-            width: 100%;
-            /* Vous pouvez ajuster la largeur selon vos besoins / */
-            height: 500px;
-            /* / Vous pouvez ajuster la hauteur selon vos besoins / */
             background-image: url("background.jpg");
-            /* / Chemin vers votre image / */
             background-position: center;
-            /* / Centre l'image / */
             background-size: cover;
-            /* / Redimensionne l'image pour couvrir tout l'élément / */
             background-repeat: no-repeat;
-            /* / Empêche la répétition de l'image */
+        }
+        #game-setup, #game-board {
+            display: none;
+        }
+        #game-setup.active, #game-board.active {
+            display: block;
         }
         #board {
             display: grid;
@@ -98,8 +96,7 @@
     </style>
 </head>
 <body>
-    <div id="board"></div>
-    <div id="controls">
+    <div id="game-setup" class="active">
         <label for="players">Select number of players (2-4): </label>
         <select id="players">
             <option value="2">2 Players</option>
@@ -107,9 +104,16 @@
             <option value="4">4 Players</option>
         </select>
         <button onclick="startGame()">Start Game</button>
-        <div id="status"></div>
-        <button onclick="rollDice()" disabled id="rollButton">Tourner dé</button>
     </div>
+
+    <div id="game-board">
+        <div id="board"></div>
+        <div id="controls">
+            <div id="status"></div>
+            <button onclick="rollDice()" disabled id="rollButton">Tourner dé</button>
+        </div>
+    </div>
+
     <div id="quiz-container">
         <h1>Quiz sur les voitures</h1>
         <div id="question-container">
@@ -119,17 +123,38 @@
     </div>
 
     <script>
-        const questions = [
-            { "question": "Quelle est la voiture la plus rapide du monde en 2024 ?", "answers": [ { "text": "Bugatti Chiron Super Sport 300+", "correct": true }, { "text": "Koenigsegg Jesko Absolut", "correct": false }, { "text": "Hennessey Venom F5", "correct": false }, { "text": "SSC Tuatara", "correct": false } ] },
-            { "question": "Quelle est la marque de voiture la plus ancienne encore en activité ?", "answers": [ { "text": "Peugeot", "correct": true }, { "text": "Ford", "correct": false }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Fiat", "correct": false } ] },
-            { "question": "Quel pays est le plus grand producteur de voitures au monde ?", "answers": [ { "text": "Chine", "correct": true }, { "text": "États-Unis", "correct": false }, { "text": "Japon", "correct": false }, { "text": "Allemagne", "correct": false } ] },
-            { "question": "Quelle est la voiture électrique la plus vendue en 2023 ?", "answers": [ { "text": "Tesla Model Y", "correct": true }, { "text": "Nissan Leaf", "correct": false }, { "text": "Volkswagen ID.4", "correct": false }, { "text": "Chevrolet Bolt EV", "correct": false } ] },
-            { "question": "Quelle est la marque de voiture la plus vendue en Europe en 2023 ?", "answers": [ { "text": "Volkswagen", "correct": true }, { "text": "Renault", "correct": false }, { "text": "Peugeot", "correct": false }, { "text": "BMW", "correct": false } ] },
-            { "question": "Quelle voiture a remporté les 24 Heures du Mans en 2023 ?", "answers": [ { "text": "Ferrari 499P", "correct": true }, { "text": "Toyota GR010 Hybrid", "correct": false }, { "text": "Porsche 963", "correct": false }, { "text": "Glickenhaus 007", "correct": false } ] },
-            { "question": "Quelle est la première voiture de série à avoir atteint 1 million d'exemplaires produits ?", "answers": [ { "text": "Ford Model T", "correct": true }, { "text": "Volkswagen Beetle", "correct": false }, { "text": "Chevrolet Bel Air", "correct": false }, { "text": "Mini Cooper", "correct": false } ] },
-            { "question": "Quelle est la voiture la plus chère jamais vendue aux enchères ?", "answers": [ { "text": "Ferrari 250 GTO", "correct": true }, { "text": "Bugatti Type 57SC Atlantic", "correct": false }, { "text": "Mercedes-Benz W196", "correct": false }, { "text": "Aston Martin DBR1", "correct": false } ] },
-            { "question": "Quelle est la première voiture entièrement électrique produite en série ?", "answers": [ { "text": "Nissan Leaf", "correct": false }, { "text": "Tesla Roadster", "correct": false }, { "text": "General Motors EV1", "correct": true }, { "text": "BMW i3", "correct": false } ] },
-            { "question": "Quel constructeur automobile a inventé la ceinture de sécurité à trois points ?", "answers": [ { "text": "Volvo", "correct": true }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Ford", "correct": false }, { "text": "BMW", "correct": false } ] }
+const questions = [
+            { "question": "Quelle est la voiture la plus rapide du monde en 2024 ?", "answers": [{ "text": "Bugatti Chiron Super Sport 300+", "correct": true }, { "text": "Koenigsegg Jesko Absolut", "correct": false }, { "text": "Hennessey Venom F5", "correct": false }, { "text": "SSC Tuatara", "correct": false }] },
+            { "question": "Quelle est la marque de voiture la plus ancienne encore en activité ?", "answers": [{ "text": "Peugeot", "correct": true }, { "text": "Ford", "correct": false }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Fiat", "correct": false }] },
+            { "question": "Quel pays est le plus grand producteur de voitures au monde ?", "answers": [{ "text": "Chine", "correct": true }, { "text": "États-Unis", "correct": false }, { "text": "Japon", "correct": false }, { "text": "Allemagne", "correct": false }] },
+            { "question": "Quelle est la voiture électrique la plus vendue en 2023 ?", "answers": [{ "text": "Tesla Model Y", "correct": true }, { "text": "Nissan Leaf", "correct": false }, { "text": "Volkswagen ID.4", "correct": false }, { "text": "Chevrolet Bolt EV", "correct": false }] },
+            { "question": "Quelle est la marque de voiture la plus vendue en Europe en 2023 ?", "answers": [{ "text": "Volkswagen", "correct": true }, { "text": "Renault", "correct": false }, { "text": "Peugeot", "correct": false }, { "text": "BMW", "correct": false }] },
+            { "question": "Quelle voiture a remporté les 24 Heures du Mans en 2023 ?", "answers": [{ "text": "Ferrari 499P", "correct": true }, { "text": "Toyota GR010 Hybrid", "correct": false }, { "text": "Porsche 963", "correct": false }, { "text": "Glickenhaus 007", "correct": false }] },
+            { "question": "Quelle est la première voiture de série à avoir atteint 1 million d'exemplaires produits ?", "answers": [{ "text": "Ford Model T", "correct": true }, { "text": "Volkswagen Beetle", "correct": false }, { "text": "Chevrolet Bel Air", "correct": false }, { "text": "Mini Cooper", "correct": false }] },
+            { "question": "Quelle est la voiture la plus chère jamais vendue aux enchères ?", "answers": [{ "text": "Ferrari 250 GTO", "correct": true }, { "text": "Bugatti Type 57SC Atlantic", "correct": false }, { "text": "Mercedes-Benz W196", "correct": false }, { "text": "Aston Martin DBR1", "correct": false }] },
+            { "question": "Quelle est la première voiture entièrement électrique produite en série ?", "answers": [{ "text": "Nissan Leaf", "correct": false }, { "text": "Tesla Roadster", "correct": false }, { "text": "General Motors EV1", "correct": true }, { "text": "BMW i3", "correct": false }] },
+            { "question": "Quel constructeur automobile a inventé la ceinture de sécurité à trois points ?", "answers": [{ "text": "Volvo", "correct": true }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Ford", "correct": false }, { "text": "BMW", "correct": false }] },
+            // Nouvelles questions
+            { "question": "Quelle est la voiture la plus vendue de tous les temps ?", "answers": [{ "text": "Toyota Corolla", "correct": true }, { "text": "Ford F-Series", "correct": false }, { "text": "Volkswagen Golf", "correct": false }, { "text": "Honda Civic", "correct": false }] },
+            { "question": "Quelle est la première voiture de série à utiliser un moteur turbo ?", "answers": [{ "text": "BMW 2002 Turbo", "correct": true }, { "text": "Porsche 911 Turbo", "correct": false }, { "text": "Saab 99 Turbo", "correct": false }, { "text": "Renault 5 Turbo", "correct": false }] },
+            { "question": "Quel constructeur automobile a produit la première voiture hybride de série ?", "answers": [{ "text": "Toyota", "correct": true }, { "text": "Honda", "correct": false }, { "text": "Ford", "correct": false }, { "text": "Chevrolet", "correct": false }] },
+            { "question": "Quelle voiture est célèbre pour avoir été utilisée dans la série télévisée 'Knight Rider' ?", "answers": [{ "text": "Pontiac Firebird Trans Am", "correct": true }, { "text": "Chevrolet Camaro", "correct": false }, { "text": "Ford Mustang", "correct": false }, { "text": "Dodge Charger", "correct": false }] },
+            { "question": "Quelle voiture a été surnommée la 'voiture du peuple' en Allemagne ?", "answers": [{ "text": "Volkswagen Beetle", "correct": true }, { "text": "Audi A4", "correct": false }, { "text": "Mercedes-Benz E-Class", "correct": false }, { "text": "Opel Kadett", "correct": false }] },
+            { "question": "Quel constructeur automobile est connu pour son logo en forme de lion ?", "answers": [{ "text": "Peugeot", "correct": true }, { "text": "Ferrari", "correct": false }, { "text": "Lamborghini", "correct": false }, { "text": "Jaguar", "correct": false }] },
+            { "question": "Quelle marque de voiture est associée à la ville de Maranello ?", "answers": [{ "text": "Ferrari", "correct": true }, { "text": "Lamborghini", "correct": false }, { "text": "Maserati", "correct": false }, { "text": "Alfa Romeo", "correct": false }] },
+            { "question": "Quel constructeur automobile a introduit la première voiture autonome de série ?", "answers": [{ "text": "Tesla", "correct": true }, { "text": "BMW", "correct": false }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Audi", "correct": false }] },
+            { "question": "Quelle est la voiture la plus vendue aux États-Unis en 2023 ?", "answers": [{ "text": "Ford F-Series", "correct": true }, { "text": "Toyota Camry", "correct": false }, { "text": "Chevrolet Silverado", "correct": false }, { "text": "Honda CR-V", "correct": false }] },
+            { "question": "Quel constructeur automobile a été fondé par Henry Ford ?", "answers": [{ "text": "Ford", "correct": true }, { "text": "General Motors", "correct": false }, { "text": "Chrysler", "correct": false }, { "text": "Cadillac", "correct": false }] },
+            { "question": "Quelle voiture est souvent appelée la 'Mini originale' ?", "answers": [{ "text": "Mini Cooper", "correct": true }, { "text": "Fiat 500", "correct": false }, { "text": "Volkswagen Beetle", "correct": false }, { "text": "Honda Civic", "correct": false }] },
+            { "question": "Quelle voiture est célèbre pour son apparition dans le film 'Retour vers le futur' ?", "answers": [{ "text": "DeLorean DMC-12", "correct": true }, { "text": "Chevrolet Corvette", "correct": false }, { "text": "Ford Mustang", "correct": false }, { "text": "Pontiac Firebird", "correct": false }] },
+            { "question": "Quel constructeur automobile utilise un logo en forme d'étoile à trois branches ?", "answers": [{ "text": "Mercedes-Benz", "correct": true }, { "text": "Toyota", "correct": false }, { "text": "Mitsubishi", "correct": false }, { "text": "Subaru", "correct": false }] },
+            { "question": "Quelle voiture a été la première à être produite en grande série sur une chaîne de montage ?", "answers": [{ "text": "Ford Model T", "correct": true }, { "text": "Chevrolet Impala", "correct": false }, { "text": "Volkswagen Beetle", "correct": false }, { "text": "Renault 4CV", "correct": false }] },
+            { "question": "Quel constructeur automobile est connu pour ses voitures de sport comme la 911 ?", "answers": [{ "text": "Porsche", "correct": true }, { "text": "Ferrari", "correct": false }, { "text": "Lamborghini", "correct": false }, { "text": "Maserati", "correct": false }] },
+            { "question": "Quel constructeur automobile a lancé le premier SUV de luxe, le Range Rover, en 1970 ?", "answers": [{ "text": "Land Rover", "correct": true }, { "text": "Jeep", "correct": false }, { "text": "Toyota", "correct": false }, { "text": "Ford", "correct": false }] },
+            { "question": "Quelle marque de voiture est connue pour son logo représentant un cheval cabré ?", "answers": [{ "text": "Ferrari", "correct": true }, { "text": "Porsche", "correct": false }, { "text": "Lamborghini", "correct": false }, { "text": "Mustang", "correct": false }] },
+            { "question": "Quelle voiture de sport est surnommée la 'Godzilla' en raison de ses performances ?", "answers": [{ "text": "Nissan GT-R", "correct": true }, { "text": "Toyota Supra", "correct": false }, { "text": "Mazda RX-7", "correct": false }, { "text": "Honda NSX", "correct": false }] },
+            { "question": "Quel constructeur automobile a introduit le premier système de freinage antiblocage (ABS) ?", "answers": [{ "text": "Mercedes-Benz", "correct": true }, { "text": "BMW", "correct": false }, { "text": "Audi", "correct": false }, { "text": "Volkswagen", "correct": false }] },
+            { "question": "Quelle voiture est célèbre pour sa capacité à se transformer en sous-marin dans le film de James Bond 'L'espion qui m'aimait' ?", "answers": [{ "text": "Lotus Esprit", "correct": true }, { "text": "Aston Martin DB5", "correct": false }, { "text": "BMW Z3", "correct": false }, { "text": "Jaguar XJ", "correct": false }] }
         ];
 
         class Dice {
@@ -140,18 +165,15 @@
 
         class Board {
             checkBox(player, newPosition) {
-                // Check if the new position is occupied by another player
                 for (const otherPlayer of players) {
                     if (otherPlayer !== player && otherPlayer.position === newPosition) {
-                        return newPosition + 1; // Move one extra step
+                        return newPosition + 1;
                     }
                 }
                 switch (newPosition) {
-                    // Ladders
                     case 3: return 13;
                     case 5: return 8;
                     case 11: return 17;
-                    // Snakes
                     case 16: return 6;
                     case 23: return 13;
                     default: return newPosition;
@@ -231,6 +253,9 @@
             updateBoard();
             document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
             document.getElementById('rollButton').disabled = false;
+
+            document.getElementById('game-setup').classList.remove('active');
+            document.getElementById('game-board').classList.add('active');
         }
 
         function animateMove(player, newPosition, callback) {
@@ -243,7 +268,7 @@
                     currentPos += step;
                     player.position = currentPos;
                     updateBoard();
-                    setTimeout(move, 300); // Animation speed
+                    setTimeout(move, 300);
                 } else {
                     callback();
                 }
