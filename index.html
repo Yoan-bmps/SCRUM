@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snakes and Ladders</title>
+    <title>Snakes and Ladders with Quiz</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,8 +14,19 @@
             height: 100vh;
             margin: 0;
             background-color: #f0f0f0;
+            width: 100%;
+            /* Vous pouvez ajuster la largeur selon vos besoins / */
+            height: 500px;
+            /* / Vous pouvez ajuster la hauteur selon vos besoins / */
+            background-image: url("background.jpg");
+            /* / Chemin vers votre image / */
+            background-position: center;
+            /* / Centre l'image / */
+            background-size: cover;
+            /* / Redimensionne l'image pour couvrir tout l'élément / */
+            background-repeat: no-repeat;
+            /* / Empêche la répétition de l'image */
         }
-
         #board {
             display: grid;
             grid-template-columns: repeat(5, 60px);
@@ -24,7 +34,6 @@
             gap: 2px;
             margin-bottom: 20px;
         }
-
         .cell {
             width: 60px;
             height: 60px;
@@ -35,7 +44,6 @@
             background-color: #f0f0f0;
             position: relative;
         }
-
         .player {
             position: absolute;
             width: 20px;
@@ -43,19 +51,52 @@
             border-radius: 50%;
             transition: transform 0.3s;
         }
-
         #controls {
             display: flex;
             flex-direction: column;
             align-items: center;
         }
-
         #status {
             margin-bottom: 20px;
         }
+        #quiz-container {
+            display: none;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .answer-btn {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .answer-btn:hover {
+            background-color: #d0d0d0;
+        }
     </style>
 </head>
-
 <body>
     <div id="board"></div>
     <div id="controls">
@@ -67,10 +108,30 @@
         </select>
         <button onclick="startGame()">Start Game</button>
         <div id="status"></div>
-        <button onclick="rollDice()" disabled id="rollButton">Roll Dice</button>
+        <button onclick="rollDice()" disabled id="rollButton">Tourner dé</button>
+    </div>
+    <div id="quiz-container">
+        <h1>Quiz sur les voitures</h1>
+        <div id="question-container">
+            <p id="question"></p>
+            <div id="answers"></div>
+        </div>
     </div>
 
     <script>
+        const questions = [
+            { "question": "Quelle est la voiture la plus rapide du monde en 2024 ?", "answers": [ { "text": "Bugatti Chiron Super Sport 300+", "correct": true }, { "text": "Koenigsegg Jesko Absolut", "correct": false }, { "text": "Hennessey Venom F5", "correct": false }, { "text": "SSC Tuatara", "correct": false } ] },
+            { "question": "Quelle est la marque de voiture la plus ancienne encore en activité ?", "answers": [ { "text": "Peugeot", "correct": true }, { "text": "Ford", "correct": false }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Fiat", "correct": false } ] },
+            { "question": "Quel pays est le plus grand producteur de voitures au monde ?", "answers": [ { "text": "Chine", "correct": true }, { "text": "États-Unis", "correct": false }, { "text": "Japon", "correct": false }, { "text": "Allemagne", "correct": false } ] },
+            { "question": "Quelle est la voiture électrique la plus vendue en 2023 ?", "answers": [ { "text": "Tesla Model Y", "correct": true }, { "text": "Nissan Leaf", "correct": false }, { "text": "Volkswagen ID.4", "correct": false }, { "text": "Chevrolet Bolt EV", "correct": false } ] },
+            { "question": "Quelle est la marque de voiture la plus vendue en Europe en 2023 ?", "answers": [ { "text": "Volkswagen", "correct": true }, { "text": "Renault", "correct": false }, { "text": "Peugeot", "correct": false }, { "text": "BMW", "correct": false } ] },
+            { "question": "Quelle voiture a remporté les 24 Heures du Mans en 2023 ?", "answers": [ { "text": "Ferrari 499P", "correct": true }, { "text": "Toyota GR010 Hybrid", "correct": false }, { "text": "Porsche 963", "correct": false }, { "text": "Glickenhaus 007", "correct": false } ] },
+            { "question": "Quelle est la première voiture de série à avoir atteint 1 million d'exemplaires produits ?", "answers": [ { "text": "Ford Model T", "correct": true }, { "text": "Volkswagen Beetle", "correct": false }, { "text": "Chevrolet Bel Air", "correct": false }, { "text": "Mini Cooper", "correct": false } ] },
+            { "question": "Quelle est la voiture la plus chère jamais vendue aux enchères ?", "answers": [ { "text": "Ferrari 250 GTO", "correct": true }, { "text": "Bugatti Type 57SC Atlantic", "correct": false }, { "text": "Mercedes-Benz W196", "correct": false }, { "text": "Aston Martin DBR1", "correct": false } ] },
+            { "question": "Quelle est la première voiture entièrement électrique produite en série ?", "answers": [ { "text": "Nissan Leaf", "correct": false }, { "text": "Tesla Roadster", "correct": false }, { "text": "General Motors EV1", "correct": true }, { "text": "BMW i3", "correct": false } ] },
+            { "question": "Quel constructeur automobile a inventé la ceinture de sécurité à trois points ?", "answers": [ { "text": "Volvo", "correct": true }, { "text": "Mercedes-Benz", "correct": false }, { "text": "Ford", "correct": false }, { "text": "BMW", "correct": false } ] }
+        ];
+
         class Dice {
             threw() {
                 return Math.ceil(Math.random() * 6);
@@ -92,12 +153,11 @@
                     case 11: return 17;
                     // Snakes
                     case 16: return 6;
-                    case 23: return 14;
+                    case 23: return 13;
                     default: return newPosition;
                 }
             }
         }
-
 
         class Player {
             constructor(name, color) {
@@ -115,6 +175,15 @@
 
         const colors = ['red', 'blue', 'green', 'yellow'];
         let dice, board, players, currentPlayerIndex, playerCount;
+        let currentPlayer, currentQuestionIndex;
+
+        function isPrime(num) {
+            if (num <= 1) return false;
+            for (let i = 2; i < num; i++) {
+                if (num % i === 0) return false;
+            }
+            return true;
+        }
 
         function createBoard() {
             const boardElement = document.getElementById('board');
@@ -183,29 +252,68 @@
             move();
         }
 
+        function showQuestion() {
+            const questionElement = document.getElementById('question');
+            const answersElement = document.getElementById('answers');
+            const currentQuestion = questions[currentQuestionIndex];
+
+            questionElement.innerText = currentQuestion.question;
+            answersElement.innerHTML = '';
+
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.classList.add('answer-btn');
+                button.addEventListener('click', () => selectAnswer(answer));
+                answersElement.appendChild(button);
+            });
+
+            document.getElementById('quiz-container').style.display = 'block';
+        }
+
+        function selectAnswer(answer) {
+            document.getElementById('quiz-container').style.display = 'none';
+            const player = players[currentPlayerIndex];
+            if (answer.correct) {
+                const newPosition = board.checkBox(player, player.position + 3);
+                animateMove(player, newPosition, () => {
+                    player.position = newPosition;
+                    checkGameEnd();
+                });
+            } else {
+                checkGameEnd();
+            }
+        }
+
+        function checkGameEnd() {
+            const player = players[currentPlayerIndex];
+            if (player.position === 25) {
+                document.getElementById('status').textContent = `${player.name} wins!`;
+                document.getElementById('rollButton').disabled = true;
+                return;
+            }
+            currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
+            document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
+        }
+
         function rollDice() {
             const diceRoll = dice.threw();
-            console.log(`Player ${players[currentPlayerIndex].name} rolled: ${diceRoll}`); // Affichage dans la console
+            console.log(`Player ${players[currentPlayerIndex].name} rolled: ${diceRoll}`);
             const currentPlayer = players[currentPlayerIndex];
-            const newPosition = board.checkBox(currentPlayer, currentPlayer.position + diceRoll);
+            const newPosition = board.checkBox(currentPlayer, currentPlayer.move(diceRoll));
 
             animateMove(currentPlayer, newPosition, () => {
                 currentPlayer.position = newPosition;
-
-                if (currentPlayer.position === 25) {
-                    document.getElementById('status').textContent = `${currentPlayer.name} wins!`;
-                    document.getElementById('rollButton').disabled = true;
-                    return;
+                if (isPrime(currentPlayer.position)) {
+                    currentQuestionIndex = Math.floor(Math.random() * questions.length);
+                    showQuestion();
+                } else {
+                    checkGameEnd();
                 }
-
-                currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
-                document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
             });
         }
-
 
         createBoard();
     </script>
 </body>
-
 </html>
