@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snakes and Ladders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        #board {
+            display: grid;
+            grid-template-columns: repeat(5, 60px);
+            grid-template-rows: repeat(5, 60px);
+            gap: 2px;
+            margin-bottom: 20px;
+        }
+
+        .cell {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            position: relative;
+        }
+
+        .player {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        #controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #status {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="board"></div>
+    <div id="controls">
+        <label for="players">Select number of players (2-4): </label>
+        <select id="players">
+            <option value="2">2 Players</option>
+            <option value="3">3 Players</option>
+            <option value="4">4 Players</option>
+        </select>
+        <button onclick="startGame()">Start Game</button>
+        <div id="status"></div>
+        <button onclick="rollDice()" disabled id="rollButton">Roll Dice</button>
+    </div>
+
+    <script>
+        class Dice {
+            threw() {
+                return Math.ceil(Math.random() * 6);
+            }
+        }
+
+        class Board {
+            checkBox(player, newPosition) {
+                // Check if the new position is occupied by another player
+                for (const otherPlayer of players) {
+                    if (otherPlayer !== player && otherPlayer.position === newPosition) {
+                        return newPosition + 1; // Move one extra step
+                    }
+                }
+                switch (newPosition) {
+                    // Ladders
+                    case 3: return 13;
+                    case 5: return 8;
+                    case 11: return 17;
+                    // Snakes
+                    case 16: return 6;
+                    case 23: return 14;
+                    default: return newPosition;
+                }
+            }
+        }
+
+
+        class Player {
+            constructor(name, color) {
+                this.name = name;
+                this.color = color;
+                this.position = 0;
+                this.check = 0;
+            }
+
+            move(result) {
+                this.check = result + this.position;
+                return this.check;
+            }
+        }
+
+        const colors = ['red', 'blue', 'green', 'yellow'];
+        let dice, board, players, currentPlayerIndex, playerCount;
+
+        function createBoard() {
+            const boardElement = document.getElementById('board');
+            boardElement.innerHTML = '';
+            for (let i = 1; i <= 25; i++) {
+                const cell = document.createElement('div');
+                cell.classList.add('cell');
+                cell.id = 'cell-' + i;
+                cell.textContent = i;
+                boardElement.appendChild(cell);
+            }
+        }
+
+        function updateBoard() {
+            clearBoard();
+            for (const player of players) {
+                const playerCell = document.getElementById('cell-' + player.position);
+                if (playerCell) {
+                    const playerElement = document.createElement('div');
+                    playerElement.classList.add('player');
+                    playerElement.style.backgroundColor = player.color;
+                    playerCell.appendChild(playerElement);
+                }
+            }
+        }
+
+        function clearBoard() {
+            for (const cell of document.querySelectorAll('.cell')) {
+                cell.innerHTML = cell.id.split('-')[1];
+            }
+        }
+
+        function startGame() {
+            dice = new Dice();
+            board = new Board();
+            players = [];
+            currentPlayerIndex = 0;
+            playerCount = parseInt(document.getElementById('players').value);
+
+            for (let i = 0; i < playerCount; i++) {
+                players.push(new Player(`Player ${i + 1}`, colors[i]));
+            }
+
+            createBoard();
+            updateBoard();
+            document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
+            document.getElementById('rollButton').disabled = false;
+        }
+
+        function animateMove(player, newPosition, callback) {
+            const startPosition = player.position;
+            const step = startPosition < newPosition ? 1 : -1;
+            let currentPos = startPosition;
+
+            function move() {
+                if (currentPos !== newPosition) {
+                    currentPos += step;
+                    player.position = currentPos;
+                    updateBoard();
+                    setTimeout(move, 300); // Animation speed
+                } else {
+                    callback();
+                }
+            }
+
+            move();
+        }
+
+        function rollDice() {
+            const diceRoll = dice.threw();
+            console.log(`Player ${players[currentPlayerIndex].name} rolled: ${diceRoll}`); // Affichage dans la console
+            const currentPlayer = players[currentPlayerIndex];
+            const newPosition = board.checkBox(currentPlayer, currentPlayer.position + diceRoll);
+
+            animateMove(currentPlayer, newPosition, () => {
+                currentPlayer.position = newPosition;
+
+                if (currentPlayer.position === 25) {
+                    document.getElementById('status').textContent = `${currentPlayer.name} wins!`;
+                    document.getElementById('rollButton').disabled = true;
+                    return;
+                }
+
+                currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
+                document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
+            });
+        }
+
+
+        createBoard();
+    </script>
+</body>
+
+</html>
