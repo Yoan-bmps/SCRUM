@@ -192,6 +192,7 @@
             <option value="4">4 joueurs</option>
         </select>
         <button onclick="startGame()">Début jeu</button>
+        <br>
     </div>
 
     <div id="game-board">
@@ -296,6 +297,9 @@
         const colors = ['red', 'blue', 'green', 'yellow'];
         let dice, board, players, currentPlayerIndex, playerCount;
         let currentPlayer, currentQuestionIndex;
+        let upCase = [14, 18, 9, 12];
+        let downCase = [8, 1, 22, 17];
+        let quizCase = [2, 3, 5, 7, 11, 13, 17, 19, 23];
 
         function isPrime(num) {
             if (num <= 1) return false;
@@ -308,6 +312,7 @@
         function createBoard() {
             const boardElement = document.getElementById('board');
             boardElement.innerHTML = '';
+
             for (let i = 1; i <= 25; i++) {
                 const cell = document.createElement('div');
                 cell.classList.add('cell');
@@ -315,6 +320,30 @@
                 cell.textContent = i;
                 boardElement.appendChild(cell);
             }
+
+            upCase.forEach(number => {
+                const cell = document.getElementById('cell-' + number);
+                if (cell) {
+                    cell.classList.add('upcase');
+                    cell.style.color = 'lightgreen'; // Style particulier pour les cases "upcase"
+                }
+            });
+
+            downCase.forEach(number => {
+                const cell = document.getElementById('cell-' + number);
+                if (cell) {
+                    cell.classList.add('downcase');
+                    cell.style.color = 'lightcoral'; // Style particulier pour les cases "downcase"
+                }
+            });
+
+            quizCase.forEach(number => {
+                const cell = document.getElementById('cell-' + number);
+                if (cell) {
+                    cell.classList.add('quizcase');
+                    cell.style.color = 'orange'; // Style particulier pour les cases "quizcase"
+                }
+            });
         }
 
         function updateBoard() {
