@@ -129,6 +129,57 @@
         .answer-btn:hover {
             background-color: #d0d0d0;
         }
+
+        #dice-container {
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+
+        #dice {
+            width: 60px;
+            height: 60px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(0deg) rotateY(0deg);
+            transition: transform 1s;
+        }
+
+        .face {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: white;
+            border: 1px solid #ccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: black;
+        }
+
+        .front {
+            transform: rotateY(0deg) translateZ(30px);
+        }
+
+        .back {
+            transform: rotateY(180deg) translateZ(30px);
+        }
+
+        .left {
+            transform: rotateY(-90deg) translateZ(30px);
+        }
+
+        .right {
+            transform: rotateY(90deg) translateZ(30px);
+        }
+
+        .top {
+            transform: rotateX(90deg) translateZ(30px);
+        }
+
+        .bottom {
+            transform: rotateX(-90deg) translateZ(30px);
+        }
     </style>
 </head>
 
@@ -146,9 +197,20 @@
     <div id="game-board">
         <div id="board"></div>
         <div id="controls">
+            <div id="dice-container">
+                <div id="dice">
+                    <div class="face front">1</div>
+                    <div class="face back">2</div>
+                    <div class="face left">4</div>
+                    <div class="face right">3</div>
+                    <div class="face top">5</div>
+                    <div class="face bottom">6</div>
+                </div>
+            </div>
             <div id="status"></div>
             <button onclick="rollDice()" disabled id="rollButton">Tourner dé</button>
         </div>
+
     </div>
 
     <div id="quiz-container">
@@ -363,16 +425,33 @@
             const currentPlayer = players[currentPlayerIndex];
             const newPosition = board.checkBox(currentPlayer, currentPlayer.move(diceRoll));
 
-            animateMove(currentPlayer, newPosition, () => {
-                currentPlayer.position = newPosition;
-                if (isPrime(currentPlayer.position)) {
-                    currentQuestionIndex = Math.floor(Math.random() * questions.length);
-                    showQuestion();
-                } else {
-                    checkGameEnd();
-                }
-            });
+            // Animation des rotations
+            const diceElement = document.getElementById('dice');
+            const rotations = [
+                { x: 0, y: 0 },     // 1
+                { x: 0, y: 180 },   // 2
+                { x: 0, y: -90 },   // 3
+                { x: 0, y: 90 },    // 4
+                { x: -90, y: 0 },   // 5
+                { x: 90, y: 0 }     // 6
+            ];
+
+            const { x, y } = rotations[diceRoll - 1];
+            diceElement.style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
+
+            setTimeout(() => {
+                animateMove(currentPlayer, newPosition, () => {
+                    currentPlayer.position = newPosition;
+                    if (isPrime(currentPlayer.position)) {
+                        currentQuestionIndex = Math.floor(Math.random() * questions.length);
+                        showQuestion();
+                    } else {
+                        checkGameEnd();
+                    }
+                });
+            }, 1000); // Attendre 1 seconde pour l'animation du dé
         }
+
 
         createBoard();
     </script>
