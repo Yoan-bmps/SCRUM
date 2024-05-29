@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Snakes and Ladders with Quiz</title>
+    <title>Snakes and Ladders</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -208,7 +208,7 @@
                 </div>
             </div>
             <div id="status"></div>
-            <button onclick="rollDice()" disabled id="rollButton">Tourner dé</button>
+            <button onclick="rollDice()" disabled id="rollButton">Lancer le dé</button>
         </div>
 
     </div>
@@ -270,10 +270,10 @@
                     }
                 }
                 switch (newPosition) {
-                    case 6: return 1;
+                    case 8: return 1;
                     case 9: return 12;
                     case 14: return 18;
-                    case 22: return 12;
+                    case 22: return 17;
                     default: return newPosition;
                 }
             }
@@ -344,12 +344,12 @@
             playerCount = parseInt(document.getElementById('players').value);
 
             for (let i = 0; i < playerCount; i++) {
-                players.push(new Player(`Player ${i + 1}`, colors[i]));
+                players.push(new Player(`Joueur ${i + 1}`, colors[i]));
             }
 
             createBoard();
             updateBoard();
-            document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
+            document.getElementById('status').textContent = `Au tour du joueur : ${players[currentPlayerIndex].name}`;
             document.getElementById('rollButton').disabled = false;
 
             document.getElementById('game-setup').classList.remove('active');
@@ -410,18 +410,30 @@
 
         function checkGameEnd() {
             const player = players[currentPlayerIndex];
-            if (player.position === 25) {
-                document.getElementById('status').textContent = `${player.name} wins!`;
+            if (player.position > 25) {
+                // Si le joueur a atteint ou dépassé la dernière case
+                // Réajuster sa position en conséquence
+                const newPosition = 25 - (player.position - 25);
+                player.position = newPosition;
+
+                // Mettre à jour l'affichage du plateau de jeu
+                updateBoard();
+            } else if (player.position == 25) {
+                // Afficher le message de victoire
+                document.getElementById('status').textContent = `${player.name} a gagné !`;
+
+                // Désactiver le bouton de lancer de dé pour empêcher le jeu de continuer
                 document.getElementById('rollButton').disabled = true;
-                return;
+            } else {
+                // Si aucun joueur n'a gagné, passer au joueur suivant
+                currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
+                document.getElementById('status').textContent = `Au tour du joueur : ${players[currentPlayerIndex].name}`;
             }
-            currentPlayerIndex = (currentPlayerIndex + 1) % playerCount;
-            document.getElementById('status').textContent = `Player ${players[currentPlayerIndex].name}'s turn`;
         }
 
         function rollDice() {
             const diceRoll = dice.threw();
-            console.log(`Player ${players[currentPlayerIndex].name} rolled: ${diceRoll}`);
+            console.log(`${players[currentPlayerIndex].name} nombre: ${diceRoll}`);
             const currentPlayer = players[currentPlayerIndex];
             const newPosition = board.checkBox(currentPlayer, currentPlayer.move(diceRoll));
 
@@ -451,7 +463,6 @@
                 });
             }, 1000); // Attendre 1 seconde pour l'animation du dé
         }
-
 
         createBoard();
     </script>
